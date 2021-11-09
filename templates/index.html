@@ -13,19 +13,14 @@
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
     crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script>
-        function see(id){            
-            document.getElementById(id).style.visibility='visible';
-        }
-    </script>
 </head>
 <body>
     <h2 class="heading" style="text-align:center;"> Generate UML Diagrams from Software Requirement Analysis Report </h2>
     <form id = "id" method="POST" action="/submit"> 
     <div class="row " style="margin:20px;">
             <div class="col-sm-2 block" >
-                <div class=" button"><input type ="submit" name="action" value="Text segmentation"></div>
-                <div class=" button"><input type ="submit" name="action" value="Text tokenisation"></div>
+                <div class=" button"><input type ="submit" name="action" value="Text Segmentation"></div>
+                <div class=" button"><input type ="submit" name="action" value="Text Tokenisation"></div>
                 <div class=" button"><input type ="submit" name="action" value="Pos Tagging"></div>
                 <div class=" button"><input type ="submit" name="action" value="Port Lemmatization"></div>
                 <div class=" button"><input type ="submit" name="action" value="Knowledge Extract"></div>
@@ -35,28 +30,27 @@
     
         <div class="col-sm-10">
             <div class="block" >       
-                <label for="Text acquisition" class="main">Enter your requirement elicitations here :</label><br><br>
+                <label for="Text Acquisition" class="main">Enter your requirement elicitations here :</label><br><br>
                 <div class="col">
-                    <textarea name = "Text acquisition" form = "id" rows = "10" placeholder="My requirement specifications are .." >{{ doc }}</textarea><br><br>
+                    <textarea name = "Text Acquisition" form = "id" rows = "10" placeholder="My requirement specifications are .." >{{ doc }}</textarea><br><br>
                 </div>    
             </div>
             <br>
             {% if show[0] == 1 %}
             <div class="block" id="segment" >
-                <label for="Text segmentation" class="main">Result after segmentation</label><br><br>
+                <label class="main">Segmentation</label><br><br>
                 <div class="col">
                     {% for line in result[0] %}
                     <div>{{ line }}</div>
                     {% endfor %}
                 </div>                                 
             </div>
-            {% endif %}
-
             <br>
+            {% endif %}
 
             {% if show[1] == 1 %}
             <div class="block" id="token" >
-                <label for="Text tokenisation" class="main">Result after tokenisation</label><br><br>
+                <label class="main">Tokenisation</label><br><br>
                 <div class="col">
                     {% for line in result[1] %}
                     <div>
@@ -67,11 +61,12 @@
                     {% endfor %}
                 </div>                                            
             </div>
-            {% endif %}
             <br>
+            {% endif %}
+            
             {% if show[2] == 1 %}
             <div class="block" id="tag" >
-                <label for="Pos Tagging" class="main">After Pos tagging</label><br><br>
+                <label class="main">Pos Tagging</label><br><br>
                 <div class="col">
                     {% for line in result[2] %}
                     <div>
@@ -82,11 +77,12 @@
                     {% endfor %}
                 </div>                                   
             </div>
-            {% endif %}
             <br>
+            {% endif %}
+
             {% if show[3] == 1 %}
             <div class="block" id="stem" >
-                <label for="Port Lemmatization" class="main">Result after Port Lemmatization</label><br><br>
+                <label class="main">Port Lemmatization</label><br><br>
                 <div class="col">
                     {% for line in result[3] %}
                     <div>
@@ -97,11 +93,12 @@
                     {% endfor %}
                 </div>                           
             </div>
-            {% endif %}
             <br>
+            {% endif %}
+
             {% if show[4] == 1 %}
             <div class="block" id="info" >
-                <label for="Knowledge" class="main">Knowledge Abstraction</label><br><br>
+                <label class="main">Knowledge Extraction</label><br><br>
                 <div class="col">
                     {% for actor in result[4] %}
                     <div>
@@ -114,11 +111,13 @@
                 </div>                               
                     
             </div>
-            {% endif %}
             <br>
+            {% endif %}
+
             {% if show[5] == 1 %}
             <div class="block" id="diagram" >
-                <label for="Knowledge" class="main">UML generated :</label><br><br>      
+                <label class="main">UML Diagram</label><br><br>     
+                <img src="{{url_for('static', filename='pillow_imagedraw.jpg')}}" style="width:100%; height:700px;" > 
             </div>
             {% endif %}
             <br>
@@ -126,6 +125,132 @@
         </div>
     </div>
 </form>
-   
+
+<!--
+    <div class="col" style="margin:80px;text-align:center;" >
+        <div class="col button"><a href="generate.html"><button >Generate</button></a></div>
+</div>
+
+
+    <div class="row " style="margin:20px;">
+        <div class="col-sm-2 block" >
+                <div class="col button"><button>Text tokenisation</button></div>
+        </div>
+        <div class="col-sm-10">
+            <div class="block">
+                <label for="Text tokenisation">Result after tokenisation</label><br><br>
+                <div class="col">
+                    <textarea name = "Text tokenisation" form = "id" rows = "10" ></textarea><br><br>
+                </div>                               
+                    
+            </div>
+        </div>
+    </div>
+
+    <div class="row " style="margin:20px;">
+        <div class="col-sm-2 block" >
+                <div class="col button"><button>Other steps</button></div>            
+        </div>
+        <div class="col-sm-10">
+            <div class="block">
+                <label for="steps">other steps</label><br><br>
+                <div class="col">
+                    <textarea name = "other steps" form = "id" rows = "10" placeholder="other steps" ></textarea><br><br>
+                </div>                               
+                    
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row " style="margin:20px;">
+        
+    </div>
+
+    <div class="row " style="margin:20px;">
+        <div class="col-sm-2 block" >
+                <div class="col button"><button>Text tokenisation</button></div>
+        </div>
+        <div class="col-sm-10">
+            <div class="block">
+                <label for="Text tokenisation">Result after tokenisation</label><br><br>
+                <div class="col">
+                    <textarea name = "Text tokenisation" form = "id" rows = "10" ></textarea><br><br>
+                </div>                                            
+            </div>
+        </div>
+    </div>
+
+    <div class="row " style="margin:20px;">
+        <div class="col-sm-2 block" >
+                <div class="col button"><button>Pos Tagging</button></div>
+        </div>
+        <div class="col-sm-10">
+            <div class="block">
+                <label for="Pos Tagging">Afetr Pos tagging</label><br><br>
+                <div class="col">
+                    <textarea name = "Pos Tagging" form = "id" rows = "10" ></textarea><br><br>
+                </div>                               
+                    
+            </div>
+        </div>
+    </div>
+    <div class="row " style="margin:20px;">
+        <div class="col-sm-2 block" >
+                <div class="col button"><button>Grammer Check</button></div>
+        </div>
+        <div class="col-sm-10">
+            <div class="block">
+                <label for="Grammer Check">Afetr removing grammatical errors</label><br><br>
+                <div class="col">
+                    <textarea name = "Grammer Check" form = "id" rows = "10" ></textarea><br><br>
+                </div>                               
+                    
+            </div>
+        </div>
+    </div><div class="row " style="margin:20px;">
+        <div class="col-sm-2 block" >
+                <div class="col button"><button>Port Stemming</button></div>
+        </div>
+        <div class="col-sm-10">
+            <div class="block">
+                <label for="Port Stemming">Result after Port Stemming</label><br><br>
+                <div class="col">
+                    <textarea name = "Port Stemming" form = "id" rows = "10" ></textarea><br><br>
+                </div>                               
+                    
+            </div>
+        </div>
+    </div>
+
+    <div class="row " style="margin:20px;">
+        <div class="col-sm-2 block" >
+                <div class="col button"><button>Other steps</button></div>            
+        </div>
+        <div class="col-sm-10">
+            <div class="block">
+                <label for="steps">other steps</label><br><br>
+                <div class="col">
+                    <textarea name = "other steps" form = "id" rows = "10" ></textarea><br><br>
+                </div>                               
+                    
+            </div>
+        </div>
+    </div>
+
+    <div class="row " style="margin:20px;">
+        <div class="col-sm-2 block" >
+                <div class="col button"><button>Generated UML</button></div>            
+        </div>
+        <div class="col-sm-10">
+            <div class="block">
+                <label for="UML">UML</label><br><br>
+                <div class="col">
+                    <textarea name = "UML" form = "id"></textarea><br><br>
+                </div>                                                   
+            </div>
+        </div>
+    </div>-->
+    
 </body>
 </html>

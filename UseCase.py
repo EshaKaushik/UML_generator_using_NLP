@@ -1,5 +1,6 @@
 import re
 import spacy
+from PIL import Image, ImageDraw, ImageFont
 
 # python -m spacy download en
 
@@ -141,4 +142,42 @@ def knowledgeExtract(doc):
     
     return use_case
                 
+
+def createUML(doc):
+    use_case = knowledgeExtract(doc)
+    fontsize = 18
+    font = ImageFont.truetype("arial.ttf", fontsize)
+    n = len(use_case.keys())
+    cases = set()
+    actors = list(use_case.keys())
+    for actor in use_case:
+        cases = cases.union(set(use_case[actor]))
+    cases = list(cases)
+    im = Image.new('RGB', (800, 700), (255, 255, 255))
+    actor = Image.open(r'static\actor.jpg')
+    draw = ImageDraw.Draw(im)
+    half = n//2
+    div1 = 700//(n-half)
+    for i in range(n-half):
+        im.paste(actor, (50+(50*(i%2)), div1*i+div1//2-50))
+        draw.text((50+(50*(i%2)), div1*i+div1//2+100),actors[i],(0,0,0),font=font)
+    div2 = 700//half
+    for i in range(half):
+        im.paste(actor, (700-(50*(i%2)), div2*i+div2//2-50))
+        draw.text((700-(50*(i%2)), div2*i+div2//2+100),actors[n-half+i],(0,0,0),font=font)
+    x = 700//len(cases)
+    for i in range(len(cases)): 
+        draw.ellipse((300, x*i+10, 500, x*(i+1)-10),fill=None, outline=(0, 0, 0))
+        draw.text((325, x*i+50),cases[i].capitalize(),(0,0,0),font=font)
+        for j in range(n-half):
+            if cases[i] in use_case[actors[j]]:
+                shape = [(125+(50*(j%2)), div1*j+div1//2+50),(300,x*(i+0.5)+10)]
+                draw.line(shape, fill =(0,0,0), width = 1)
+        for j in range(half):
+            if cases[i] in use_case[actors[n-half+j]]:
+                shape = [(675-(50*(j%2)), div2*j+div2//2+50),(500,x*(i+0.5)+10)]
+                draw.line(shape, fill =(0,0,0), width = 1)
+    im.save('static\pillow_imagedraw.jpg',quality=95)
+
+
 
