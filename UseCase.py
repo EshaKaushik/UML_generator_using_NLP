@@ -109,15 +109,17 @@ def knowledgeExtract(doc):
                 elif pos_text[c].pos_ == 'VERB':
                     break
                 c += 1
-            
             for i in actors:
                 if i.title() not in use_case:
-                    use_case[i.title()] = []
-                    
+                    use_case[i.title()] = set()
             if not actors and not flag:
                 actors = prev_actors
-                
-            if pos_text[c].pos_ != 'VERB' or (pos_text[c].pos_ == 'VERB' and pos_text[c].lemma_.lower() in ['include', 'involve', 'consist', 'contain']):
+            if flag:
+                prev_actors = actors
+            else:
+                prev_actors = prev_actors.union(actors)
+            flag = False
+            if c >= len(pos_text) or pos_text[c].lemma_.lower() in ['include', 'involve', 'consist', 'contain', 'be']:
                 c += 1
                 continue
             v = pos_text[c]
@@ -129,23 +131,19 @@ def knowledgeExtract(doc):
                 if pos_text[c].dep_ == 'dobj':
                     u += " " + pos_text[c].lemma_
                 c += 1
-            
             for i in actors:
-                use_case[i.title()].append(u)
-            
-            if flag:
-                prev_actors = actors
-            else:
-                prev_actors = prev_actors.union(actors)
-                
-            flag = False
-    
+                use_case[i.title()].add(u)
+    x = list(use_case.keys())
+    for i in x:
+        if not use_case[i]:
+            del use_case[i]
     return use_case
                 
 
 def createUML(doc):
+
     use_case = knowledgeExtract(doc)
-    fontsize = 18
+    fontsize = 15
     font = ImageFont.truetype("arial.ttf", fontsize)
     n = len(use_case.keys())
     cases = set()
@@ -167,15 +165,15 @@ def createUML(doc):
         draw.text((700-(50*(i%2)), div2*i+div2//2+100),actors[n-half+i],(0,0,0),font=font)
     x = 700//len(cases)
     for i in range(len(cases)): 
-        draw.ellipse((300, x*i+10, 500, x*(i+1)-10),fill=None, outline=(0, 0, 0))
-        draw.text((325, x*i+50),cases[i].capitalize(),(0,0,0),font=font)
+        draw.ellipse((300, x*i+5, 500, x*(i+1)-5),fill=None, outline=(0, 0, 0))
+        draw.text((325, x*(i+0.5)-10),cases[i].capitalize(),(0,0,0),font=font)
         for j in range(n-half):
             if cases[i] in use_case[actors[j]]:
-                shape = [(125+(50*(j%2)), div1*j+div1//2+50),(300,x*(i+0.5)+10)]
+                shape = [(125+(50*(j%2)), div1*j+div1//2+50),(300,x*(i+0.5))]
                 draw.line(shape, fill =(0,0,0), width = 1)
         for j in range(half):
             if cases[i] in use_case[actors[n-half+j]]:
-                shape = [(675-(50*(j%2)), div2*j+div2//2+50),(500,x*(i+0.5)+10)]
+                shape = [(675-(50*(j%2)), div2*j+div2//2+50),(500,x*(i+0.5))]
                 draw.line(shape, fill =(0,0,0), width = 1)
     im.save('static\pillow_imagedraw.jpg',quality=95)
 
